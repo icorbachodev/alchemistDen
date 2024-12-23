@@ -44,10 +44,10 @@ export default function Catalogue() {
 
   useEffect(() => {
     let url = 'https://www.thecocktaildb.com/api/json/v1/1/filter.php?';
-    selectedCategory ? url += `c=${selectedCategory}&` : url += 'i=Gin&';
-    selectedGlass ? url += `g=${selectedGlass}&` : url += '';
-    selectedAlcoholic ? url += `a=${selectedAlcoholic}` : url += '';
-    searchQuery ? url = `https://www.thecocktaildb.com/api/json/v1/1/search.php?s=${searchQuery}` : url += '';
+    if (selectedCategory){ url += `c=${selectedCategory}&`} else { url += 'i=Gin&'; };
+    if (selectedGlass) { url += `g=${selectedGlass}&` };
+    if (selectedAlcoholic) { url += `a=${selectedAlcoholic}&` };
+    if (searchQuery) { url += `s=${searchQuery}` };
 
     fetch(url)
       .then(response => response.json())
