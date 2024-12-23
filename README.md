@@ -1,4 +1,6 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Alchemist Den
+
+This is a front-end practice project using Next.js, Tailwind CSS, Framer Motion, and the CocktailDB API.
 
 ## Getting Started
 
@@ -12,25 +14,34 @@ yarn dev
 pnpm dev
 # or
 bun dev
-```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Project Overview
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+**Alchemist Den** is a cocktail catalogue application that allows users to browse and search for various cocktails. The application fetches data from the CocktailDB API and displays it in a visually appealing manner using Tailwind CSS and Framer Motion for animations.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Features
+
+- **Cocktail Catalogue**: Browse a list of cocktails with images and names.
+- **Search Functionality**: Search for cocktails by name.
+- **Filter Options**: Filter cocktails by category, glass type, and alcoholic content.
+- **Cocktail Details**: View detailed information about a selected cocktail, including its image, category, glass type, and instructions.
+
+## Technologies Used
+
+- **Next.js**: A React framework for building fast and user-friendly web applications.
+- **Tailwind CSS**: A utility-first CSS framework for rapid UI development.
+- **Framer Motion**: A library for creating animations and interactions in React.
+- **CocktailDB API**: An API providing data about various cocktails.
 
 ## Learn More
 
-To learn more about Next.js, take a look at the following resources:
+To learn more about the technologies used in this project, check out the following resources:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- [Next.js Documentation](https://nextjs.org/docs) - Learn about Next.js features and API.
+- [Tailwind CSS Documentation](https://tailwindcss.com/docs) - Learn about Tailwind CSS and how to use it.
+- [Framer Motion Documentation](https://www.framer.com/motion/) - Learn about Framer Motion and how to create animations.
+- [CocktailDB API Documentation](https://www.thecocktaildb.com/api.php) - Learn about the CocktailDB API and its endpoints.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## License
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+This project is licensed under the [MIT License](https://opensource.org/licenses/MIT).
