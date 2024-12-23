@@ -15,7 +15,7 @@ interface CocktailDetails {
   [key: string]: string | undefined;
 }
 
-export default function Page({ params }: { params: { id: string } }) {
+export default function Page() {
   const [cocktail, setCocktail] = useState<CocktailDetails | null>(null);
   const { id } = useParams();
 
