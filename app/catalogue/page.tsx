@@ -47,7 +47,7 @@ export default function Catalogue() {
     if (selectedCategory){ url += `c=${selectedCategory}&`} else { url += 'i=Gin&'; };
     if (selectedGlass) { url += `g=${selectedGlass}&` };
     if (selectedAlcoholic) { url += `a=${selectedAlcoholic}&` };
-    if (searchQuery) { url += `s=${searchQuery}` };
+    if (searchQuery) { url = `https://www.thecocktaildb.com/api/json/v1/1/search.php?s=${searchQuery}` };
 
     fetch(url)
       .then(response => response.json())
