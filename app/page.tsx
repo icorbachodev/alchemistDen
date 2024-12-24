@@ -15,7 +15,7 @@ export default function Home() {
         <Image src="/AlchemistDenLogo.png" alt="Alchemist Den Logo" width={150} height={150} />
       </motion.div>
       <motion.div 
-        className="text-3xl sm:text-5xl mb-4"
+        className="text-3xl sm:text-5xl mb-4 text-amber-500 text-center"
         initial={{ opacity: 0, y: -50 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 1 }}
