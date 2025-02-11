@@ -13,7 +13,6 @@ import {
   getAlcoholicFilters,
 } from "@/lib/api"
 
-// Define interfaces for our state
 interface Cocktail {
   idDrink: string
   strDrink: string
