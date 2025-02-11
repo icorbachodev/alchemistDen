@@ -10,7 +10,7 @@ export default async function Home() {
     <div className="min-h-screen bg-amber-100">
       <Header />
       <main className="container mx-auto px-4 py-8">
-        <h1 className="text-4xl font-bold text-center mb-8 text-amber-900">Welcome to the Alchemist's Den</h1>
+        <h1 className="text-4xl font-bold text-center mb-8 text-amber-900">Welcome to the Alchemist&apos;s Den</h1>
         <p className="text-xl text-center mb-8 text-amber-800">
           Discover and explore a wide variety of magical elixirs
         </p>

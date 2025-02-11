@@ -5,7 +5,7 @@ export default function Header() {
     <header className="bg-amber-900 text-amber-100 p-4">
       <nav className="container mx-auto flex justify-between items-center">
         <Link href="/" className="text-2xl font-bold">
-          Alchemist's Den
+          Alchemist&apos;s Den
         </Link>
         <ul className="flex space-x-4">
           <li>
