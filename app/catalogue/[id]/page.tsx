@@ -1,66 +1,69 @@
-'use client'
-import { useEffect, useState } from 'react';
-import { motion } from 'framer-motion';
-import Image from 'next/image';
-import { useParams } from 'next/navigation';
-import Link from 'next/link';
+import Image from "next/image"
+import Header from "@/components/Header"
+import { getCocktailDetails, type Cocktail } from "@/lib/api"
 
-interface CocktailDetails {
-  idDrink: string;
-  strDrink: string;
-  strDrinkThumb: string;
-  strCategory: string;
-  strGlass: string;
-  strInstructions: string;
-  [key: string]: string | undefined;
-}
+export default async function ElixirDetail({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params
+  const cocktail: Cocktail = await getCocktailDetails(id)
 
-export default function Page() {
-  const [cocktail, setCocktail] = useState<CocktailDetails | null>(null);
-  const { id } = useParams();
-
-  useEffect(() => {
-    if (id) {
-      const formattedName = (id as string);
-      fetch(`https://www.thecocktaildb.com/api/json/v1/1/search.php?s=${formattedName}`)
-        .then(response => response.json())
-        .then(data => setCocktail(data.drinks[0]))
-        .catch(error => console.error('Error fetching cocktail details:', error));
-    }
-  }, [id]);
-
-  if (!cocktail) {
-    return <p className="text-center text-gray-400">Loading...</p>;
-  }
+  const ingredients = Object.entries(cocktail)
+    .filter(([key, value]) => key.startsWith("strIngredient") && value)
+    .map(([key, value]) => {
+      const index = key.replace("strIngredient", "")
+      return {
+        ingredient: value as string,
+        measure: cocktail[`strMeasure${index}` as keyof Cocktail] as string | undefined,
+      }
+    })
 
   return (
-    <div className="flex items-center bg-black min-h-screen text-white font-alchemist p-4">
-      <div className="container mx-auto py-8">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          <motion.div
-            className="flex justify-center"
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 1 }}
-          >
-            <Image src={cocktail.strDrinkThumb} alt={cocktail.strDrink} width={500} height={500} className="rounded-lg object-cover border-4 border-amber-500 shadow-lg" />
-          </motion.div>
-          <motion.div
-            className="flex flex-col justify-center p-6"
-            initial={{ opacity: 0, x: -100 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 1 }}
-          >
-            <h1 className="text-3xl text-center sm:text-4xl md:text-5xl md:text-left font-bold text-amber-500 mb-8">{cocktail.strDrink}</h1>
-            <p className="text-lg mb-2"><strong>Category:</strong> {cocktail.strCategory}</p>
-            <p className="text-lg mb-2"><strong>Glass:</strong> {cocktail.strGlass}</p>
-            <p className="text-lg mb-8"><strong>Instructions:</strong> {cocktail.strInstructions}</p>
-            <Link href="/catalogue">
-              <button className="bg-amber-500 text-black p-2 rounded hover:bg-amber-600 w-full">Back to catalogue</button>
-            </Link>
-          </motion.div>
+    <div className="min-h-screen bg-amber-100">
+      <Header />
+      <main className="container mx-auto px-4 py-8">
+        <div className="bg-amber-50 rounded-lg shadow-md p-6 border-2 border-amber-700">
+          <div className="flex flex-col md:flex-row">
+            <div className="md:w-1/2 mb-6 md:mb-0">
+              <Image
+                src={cocktail.strDrinkThumb || "/placeholder.svg"}
+                alt={cocktail.strDrink}
+                width={500}
+                height={500}
+                className="rounded-lg"
+              />
+            </div>
+            <div className="md:w-1/2 md:pl-6">
+              <h1 className="text-3xl font-bold mb-4 text-amber-900">{cocktail.strDrink}</h1>
+              {cocktail.strCategory && (
+                <p className="mb-4 text-amber-800">
+                  <span className="font-semibold">Category:</span> {cocktail.strCategory}
+                </p>
+              )}
+              {cocktail.strGlass && (
+                <p className="mb-4 text-amber-800">
+                  <span className="font-semibold">Vessel:</span> {cocktail.strGlass}
+                </p>
+              )}
+              {cocktail.strAlcoholic && (
+                <p className="mb-4 text-amber-800">
+                  <span className="font-semibold">Type:</span> {cocktail.strAlcoholic}
+                </p>
+              )}
+              <h2 className="text-xl font-semibold mb-2 text-amber-900">Ingredients:</h2>
+              <ul className="list-disc list-inside mb-4 text-amber-800">
+                {ingredients.map(({ ingredient, measure }, index) => (
+                  <li key={index}>{measure ? `${measure} ${ingredient}` : ingredient}</li>
+                ))}
+              </ul>
+              {cocktail.strInstructions && (
+                <>
+                  <h2 className="text-xl font-semibold mb-2 text-amber-900">Alchemical Process:</h2>
+                  <p className="text-amber-800">{cocktail.strInstructions}</p>
+                </>
+              )}
+            </div>
+          </div>
         </div>
-      </div>
+      </main>
     </div>
-  );
+  )
 }

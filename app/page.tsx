@@ -1,38 +1,39 @@
-'use client'
-import { motion } from 'framer-motion';
-import Image from 'next/image';
-import Link from 'next/link';
+import Link from "next/link"
+import Header from "@/components/Header"
+import { getRandomCocktails } from "@/lib/api"
+import CocktailCard from "@/components/CocktailCard"
 
-export default function Home() {
+export default async function Home() {
+  const randomCocktails = await getRandomCocktails(6)
+
   return (
-    <div className="bg-black min-h-screen flex flex-col items-center justify-center text-white font-alchemist p-4">
-      <motion.div 
-        className="mb-8"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 1 }}
-      >
-        <Image src="/AlchemistDenLogo.png" alt="Alchemist Den Logo" width={150} height={150} />
-      </motion.div>
-      <motion.div 
-        className="text-3xl sm:text-5xl mb-4 text-amber-500 text-center"
-        initial={{ opacity: 0, y: -50 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 1 }}
-      >
-        Welcome to Alchemist Den
-      </motion.div>
-      <motion.div 
-        className="text-lg sm:text-xl mb-8 text-center"
-        initial={{ opacity: 0, y: 50 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 1, delay: 0.5 }}
-      >
-        Discover the art of cocktail making
-      </motion.div>
-      <Link href="/catalogue">
-        <button className="bg-amber-500 text-black p-2 rounded hover:bg-amber-600">Enter the Den</button>
-      </Link>
+    <div className="min-h-screen bg-amber-100">
+      <Header />
+      <main className="container mx-auto px-4 py-8">
+        <h1 className="text-4xl font-bold text-center mb-8 text-amber-900">Welcome to the Alchemist's Den</h1>
+        <p className="text-xl text-center mb-8 text-amber-800">
+          Discover and explore a wide variety of magical elixirs
+        </p>
+        <div className="text-center mb-8">
+          <Link
+            href="/catalogue"
+            className="bg-amber-700 text-amber-100 px-6 py-3 rounded-lg text-lg font-semibold hover:bg-amber-800 transition-colors"
+          >
+            Explore Elixirs
+          </Link>
+        </div>
+        <h2 className="text-2xl font-semibold mb-4 text-amber-900">Featured Concoctions</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+          {randomCocktails.map((cocktail) => (
+            <CocktailCard
+              key={cocktail.idDrink}
+              id={cocktail.idDrink}
+              name={cocktail.strDrink}
+              image={cocktail.strDrinkThumb}
+            />
+          ))}
+        </div>
+      </main>
     </div>
-  );
+  )
 }
