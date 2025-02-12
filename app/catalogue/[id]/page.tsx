@@ -1,10 +1,15 @@
 import Image from "next/image"
 import Header from "@/components/Header"
 import { getCocktailDetails, type Cocktail } from "@/lib/api"
+import { notFound } from "next/navigation"
 
 export default async function ElixirDetail({ params }: { params: Promise<{ id: string }> }) {
   const id = (await params).id
-  const cocktail: Cocktail = await getCocktailDetails(id)
+  const cocktail: Cocktail | null = await getCocktailDetails(id)
+
+  if (!cocktail) {
+    notFound()
+  }
 
   const ingredients = Object.entries(cocktail)
     .filter(([key, value]) => key.startsWith("strIngredient") && value)
