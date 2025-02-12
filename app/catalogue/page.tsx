@@ -54,6 +54,7 @@ export default function Catalogue() {
       } catch (err) {
         console.error("Error fetching initial data:", err)
         setError("Failed to load initial data. Please try again later.")
+        console.log(error)
       } finally {
         setLoading(false)
       }
