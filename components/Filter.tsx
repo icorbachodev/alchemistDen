@@ -1,39 +1,33 @@
 "use client"
 
 import { useState } from "react"
+import { useRouter } from "next/navigation"
 
 interface FilterProps {
   categories: string[]
   glasses: string[]
   types: string[]
-  onFilterChange: (filters: { category: string; glass: string; type: string }) => void
 }
 
-export default function Filter({ categories, glasses, types, onFilterChange }: FilterProps) {
+export default function Filter({ categories, glasses, types }: FilterProps) {
   const [category, setCategory] = useState("")
   const [glass, setGlass] = useState("")
   const [type, setType] = useState("")
+  const router = useRouter()
 
-  const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setCategory(e.target.value)
-    onFilterChange({ category: e.target.value, glass, type })
-  }
-
-  const handleGlassChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setGlass(e.target.value)
-    onFilterChange({ category, glass: e.target.value, type })
-  }
-
-  const handleTypeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setType(e.target.value)
-    onFilterChange({ category, glass, type: e.target.value })
+  const handleFilterChange = () => {
+    const searchParams = new URLSearchParams()
+    if (category) searchParams.append("category", category)
+    if (glass) searchParams.append("glass", glass)
+    if (type) searchParams.append("type", type)
+    router.push(`/catalogue?${searchParams.toString()}`)
   }
 
   return (
     <div className="flex flex-wrap gap-4 mb-4">
       <select
         value={category}
-        onChange={handleCategoryChange}
+        onChange={(e) => setCategory(e.target.value)}
         className="p-2 border-2 border-amber-700 rounded-md bg-amber-50 text-amber-900"
       >
         <option value="">All Categories</option>
@@ -45,7 +39,7 @@ export default function Filter({ categories, glasses, types, onFilterChange }: F
       </select>
       <select
         value={glass}
-        onChange={handleGlassChange}
+        onChange={(e) => setGlass(e.target.value)}
         className="p-2 border-2 border-amber-700 rounded-md bg-amber-50 text-amber-900"
       >
         <option value="">All Vessels</option>
@@ -57,7 +51,7 @@ export default function Filter({ categories, glasses, types, onFilterChange }: F
       </select>
       <select
         value={type}
-        onChange={handleTypeChange}
+        onChange={(e) => setType(e.target.value)}
         className="p-2 border-2 border-amber-700 rounded-md bg-amber-50 text-amber-900"
       >
         <option value="">All Types</option>
@@ -67,6 +61,12 @@ export default function Filter({ categories, glasses, types, onFilterChange }: F
           </option>
         ))}
       </select>
+      <button
+        onClick={handleFilterChange}
+        className="bg-amber-700 text-amber-100 px-4 py-2 rounded-md hover:bg-amber-800 transition-colors"
+      >
+        Apply Filters
+      </button>
     </div>
   )
 }
