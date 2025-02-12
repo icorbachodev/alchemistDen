@@ -1,8 +1,7 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, Suspense } from "react"
 import Header from "@/components/Header"
-import CocktailCard from "@/components/CocktailCard"
 import Filter from "@/components/Filter"
 import {
   getCocktailsByCategory,
@@ -12,6 +11,11 @@ import {
   getGlasses,
   getAlcoholicFilters,
 } from "@/lib/api"
+import dynamic from "next/dynamic"
+
+const CocktailCard = dynamic(() => import("@/components/CocktailCard"), {
+  loading: () => <p>Loading...</p>,
+})
 
 interface Cocktail {
   idDrink: string
@@ -31,38 +35,53 @@ export default function Catalogue() {
   const [glasses, setGlasses] = useState<string[]>([])
   const [types, setTypes] = useState<string[]>([])
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
     async function fetchInitialData() {
-      const [categoriesData, glassesData, typesData, initialCocktails] = await Promise.all([
-        getCategories(),
-        getGlasses(),
-        getAlcoholicFilters(),
-        getCocktailsByCategory("Ordinary Drink"),
-      ])
-      setCategories(categoriesData)
-      setGlasses(glassesData)
-      setTypes(typesData)
-      setCocktails(initialCocktails)
-      setLoading(false)
+      try {
+        const [categoriesData, glassesData, typesData, initialCocktails] = await Promise.all([
+          getCategories(),
+          getGlasses(),
+          getAlcoholicFilters(),
+          getCocktailsByCategory("Ordinary Drink"),
+        ])
+        setCategories(categoriesData)
+        setGlasses(glassesData)
+        setTypes(typesData)
+        setCocktails(initialCocktails)
+        setError(null)
+      } catch (err) {
+        console.error("Error fetching initial data:", err)
+        setError("Failed to load initial data. Please try again later.")
+      } finally {
+        setLoading(false)
+      }
     }
     fetchInitialData()
   }, [])
 
   const handleFilterChange = async ({ category, glass, type }: FilterOptions) => {
     setLoading(true)
-    let filteredCocktails: Cocktail[]
-    if (category) {
-      filteredCocktails = await getCocktailsByCategory(category)
-    } else if (glass) {
-      filteredCocktails = await getCocktailsByGlass(glass)
-    } else if (type) {
-      filteredCocktails = await getCocktailsByAlcoholic(type)
-    } else {
-      filteredCocktails = await getCocktailsByCategory("Ordinary Drink")
+    setError(null)
+    try {
+      let filteredCocktails: Cocktail[]
+      if (category) {
+        filteredCocktails = await getCocktailsByCategory(category)
+      } else if (glass) {
+        filteredCocktails = await getCocktailsByGlass(glass)
+      } else if (type) {
+        filteredCocktails = await getCocktailsByAlcoholic(type)
+      } else {
+        filteredCocktails = await getCocktailsByCategory("Ordinary Drink")
+      }
+      setCocktails(filteredCocktails)
+    } catch (err) {
+      console.error("Error applying filters:", err)
+      setError("Failed to apply filters. Please try again later.")
+    } finally {
+      setLoading(false)
     }
-    setCocktails(filteredCocktails)
-    setLoading(false)
   }
 
   return (
@@ -75,14 +94,16 @@ export default function Catalogue() {
           <p className="text-center text-amber-800">Brewing elixirs...</p>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            {cocktails.map((cocktail) => (
-              <CocktailCard
-                key={cocktail.idDrink}
-                id={cocktail.idDrink}
-                name={cocktail.strDrink}
-                image={cocktail.strDrinkThumb}
-              />
-            ))}
+            <Suspense fallback={<p>Loading...</p>}>
+              {cocktails.map((cocktail) => (
+                <CocktailCard
+                  key={cocktail.idDrink}
+                  id={cocktail.idDrink}
+                  name={cocktail.strDrink}
+                  image={cocktail.strDrinkThumb}
+                />
+              ))}
+            </Suspense>
           </div>
         )}
       </main>

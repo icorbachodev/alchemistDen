@@ -18,12 +18,11 @@ bun dev
 
 ## Project Overview
 
-**Alchemist Den** is a cocktail catalogue application that allows users to browse and search for various cocktails. The application fetches data from the CocktailDB API and displays it in a visually appealing manner using Tailwind CSS and Framer Motion for animations.
+**Alchemist Den** is a cocktail catalogue application that allows users to browse for various cocktails. The application fetches data from the CocktailDB API and displays it in a visually appealing manner using Tailwind CSS and Framer Motion for animations.
 
 ## Features
 
 - **Cocktail Catalogue**: Browse a list of cocktails with images and names.
-- **Search Functionality**: Search for cocktails by name.
 - **Filter Options**: Filter cocktails by category, glass type, and alcoholic content.
 - **Cocktail Details**: View detailed information about a selected cocktail, including its image, category, glass type, and instructions.
 

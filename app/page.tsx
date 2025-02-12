@@ -1,7 +1,12 @@
 import Link from "next/link"
 import Header from "@/components/Header"
 import { getRandomCocktails } from "@/lib/api"
-import CocktailCard from "@/components/CocktailCard"
+import dynamic from "next/dynamic"
+import { Suspense } from "react"
+
+const CocktailCard = dynamic(() => import("@/components/CocktailCard"), {
+  loading: () => <p>Loading...</p>,
+})
 
 export default async function Home() {
   const randomCocktails = await getRandomCocktails(6)
@@ -24,14 +29,16 @@ export default async function Home() {
         </div>
         <h2 className="text-2xl font-semibold mb-4 text-amber-900">Featured Concoctions</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-          {randomCocktails.map((cocktail) => (
-            <CocktailCard
-              key={cocktail.idDrink}
-              id={cocktail.idDrink}
-              name={cocktail.strDrink}
-              image={cocktail.strDrinkThumb}
-            />
-          ))}
+          <Suspense fallback={<p>Loading...</p>}>
+            {randomCocktails.map((cocktail) => (
+              <CocktailCard
+                key={cocktail.idDrink}
+                id={cocktail.idDrink}
+                name={cocktail.strDrink}
+                image={cocktail.strDrinkThumb}
+              />
+            ))}
+          </Suspense>
         </div>
       </main>
     </div>
