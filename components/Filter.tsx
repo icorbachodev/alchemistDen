@@ -1,33 +1,62 @@
 "use client"
 
-import { useState } from "react"
-import { useRouter } from "next/navigation"
+import { useState, useEffect } from "react"
+import { useRouter, useSearchParams } from "next/navigation"
 
 interface FilterProps {
   categories: string[]
   glasses: string[]
   types: string[]
+  initialCategory: string
+  initialGlass: string
+  initialType: string
 }
 
-export default function Filter({ categories, glasses, types }: FilterProps) {
-  const [category, setCategory] = useState("")
-  const [glass, setGlass] = useState("")
-  const [type, setType] = useState("")
+export default function Filter({
+  categories,
+  glasses,
+  types,
+  initialCategory,
+  initialGlass,
+  initialType,
+}: FilterProps) {
+  const [category, setCategory] = useState(initialCategory || "")
+  const [glass, setGlass] = useState(initialGlass || "")
+  const [type, setType] = useState(initialType || "")
   const router = useRouter()
+  const searchParams = useSearchParams()
 
-  const handleFilterChange = () => {
-    const searchParams = new URLSearchParams()
-    if (category) searchParams.append("category", category)
-    if (glass) searchParams.append("glass", glass)
-    if (type) searchParams.append("type", type)
-    router.push(`/catalogue?${searchParams.toString()}`)
+  useEffect(() => {
+    const updateFilters = async () => {
+      const params = new URLSearchParams(searchParams.toString())
+      setCategory(params.get("category") || "")
+      setGlass(params.get("glass") || "")
+      setType(params.get("type") || "")
+    }
+    updateFilters()
+  }, [searchParams])
+
+  const handleFilterChange = async (filterType: "category" | "glass" | "type", value: string) => {
+    const params = new URLSearchParams(searchParams.toString())
+
+    if (filterType === "category") setCategory(value)
+    if (filterType === "glass") setGlass(value)
+    if (filterType === "type") setType(value)
+
+    if (value) {
+      params.set(filterType, value)
+    } else {
+      params.delete(filterType)
+    }
+
+    router.push(`/catalogue?${params.toString()}`)
   }
 
   return (
     <div className="flex flex-wrap gap-4 mb-4">
       <select
         value={category}
-        onChange={(e) => setCategory(e.target.value)}
+        onChange={(e) => handleFilterChange("category", e.target.value)}
         className="p-2 border-2 border-amber-700 rounded-md bg-amber-50 text-amber-900"
       >
         <option value="">All Categories</option>
@@ -39,7 +68,7 @@ export default function Filter({ categories, glasses, types }: FilterProps) {
       </select>
       <select
         value={glass}
-        onChange={(e) => setGlass(e.target.value)}
+        onChange={(e) => handleFilterChange("glass", e.target.value)}
         className="p-2 border-2 border-amber-700 rounded-md bg-amber-50 text-amber-900"
       >
         <option value="">All Vessels</option>
@@ -51,7 +80,7 @@ export default function Filter({ categories, glasses, types }: FilterProps) {
       </select>
       <select
         value={type}
-        onChange={(e) => setType(e.target.value)}
+        onChange={(e) => handleFilterChange("type", e.target.value)}
         className="p-2 border-2 border-amber-700 rounded-md bg-amber-50 text-amber-900"
       >
         <option value="">All Types</option>
@@ -61,12 +90,6 @@ export default function Filter({ categories, glasses, types }: FilterProps) {
           </option>
         ))}
       </select>
-      <button
-        onClick={handleFilterChange}
-        className="bg-amber-700 text-amber-100 px-4 py-2 rounded-md hover:bg-amber-800 transition-colors"
-      >
-        Apply Filters
-      </button>
     </div>
   )
 }
